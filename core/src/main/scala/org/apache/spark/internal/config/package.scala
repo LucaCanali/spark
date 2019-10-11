@@ -225,6 +225,10 @@ package object config {
     .bytesConf(ByteUnit.MiB)
     .createWithDefaultString("1g")
 
+  private[spark] val EXECUTOR_X509_PROXY = ConfigBuilder("spark.executor.x509proxyname")
+    .stringConf
+    .createWithDefault("X509ProxyFile")
+
   private[spark] val EXECUTOR_MEMORY_OVERHEAD = ConfigBuilder("spark.executor.memoryOverhead")
     .doc("The amount of non-heap memory to be allocated per executor in cluster mode, " +
       "in MiB unless otherwise specified.")

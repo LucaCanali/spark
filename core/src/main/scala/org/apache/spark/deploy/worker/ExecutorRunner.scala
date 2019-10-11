@@ -29,13 +29,13 @@ import org.apache.spark.deploy.{ApplicationDescription, ExecutorState}
 import org.apache.spark.deploy.DeployMessages.ExecutorStateChanged
 import org.apache.spark.deploy.StandaloneResourceUtils.prepareResourcesFile
 import org.apache.spark.internal.Logging
+import org.apache.spark.internal.config.EXECUTOR_X509_PROXY
 import org.apache.spark.internal.config.SPARK_EXECUTOR_PREFIX
 import org.apache.spark.internal.config.UI._
 import org.apache.spark.resource.ResourceInformation
 import org.apache.spark.rpc.RpcEndpointRef
 import org.apache.spark.util.{ShutdownHookManager, Utils}
 import org.apache.spark.util.logging.FileAppender
-
 /**
  * Manages the execution of one executor process.
  * This is currently only used in standalone mode.
@@ -165,6 +165,13 @@ private[deploy] class ExecutorRunner(
       builder.directory(executorDir)
       builder.environment.put("SPARK_EXECUTOR_FILE_DIR", executorDir.getAbsolutePath)
       builder.environment.put("SPARK_EXECUTOR_DIRS", appLocalDirs.mkString(File.pathSeparator))
+
+      // hack to add x509 user proxy to executor environment when using  Spark Standalone
+      val x509ProxyName = conf.get(EXECUTOR_X509_PROXY)
+      val x509ProxyFullPath = executorDir.getAbsolutePath + "/" + x509ProxyName
+      builder.environment.put("X509_USER_PROXY", x509ProxyFullPath)
+      logWarning(s"added X509_USER_PROXY=${x509ProxyFullPath}")
+
       // In case we are running this from within the Spark Shell, avoid creating a "scala"
       // parent process for the executor command
       builder.environment.put("SPARK_LAUNCH_WITH_SCALA", "0")
