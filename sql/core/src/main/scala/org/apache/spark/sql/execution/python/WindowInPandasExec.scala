@@ -84,7 +84,7 @@ case class WindowInPandasExec(
     partitionSpec: Seq[Expression],
     orderSpec: Seq[SortOrder],
     child: SparkPlan)
-  extends WindowExecBase {
+  extends WindowExecBase with PythonSQLMetrics {
 
   override def output: Seq[Attribute] =
     child.output ++ windowExpression.map(_.toAttribute)
@@ -390,7 +390,17 @@ case class WindowInPandasExec(
         argOffsets,
         pythonInputSchema,
         sessionLocalTimeZone,
-        pythonRunnerConf).compute(pythonInput, context.partitionId(), context)
+        pythonRunnerConf,
+        pythonExecTime,
+        pythonDataSerializeTime,
+        pythonCodeSerializeTime,
+        pythonCodeSent,
+        pythonDataReceived,
+        pythonDataSent,
+        pythonNumRowsReceived,
+        pythonNumRowsSent,
+        pythonNumBatchesReceived,
+        pythonNumBatchesSent).compute(pythonInput, context.partitionId(), context)
 
       val joined = new JoinedRow
 
