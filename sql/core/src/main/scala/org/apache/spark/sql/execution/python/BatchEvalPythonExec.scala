@@ -79,8 +79,7 @@ case class BatchEvalPythonExec(udfs: Seq[PythonUDF], resultAttrs: Seq[Attribute]
       pythonCodeSent,
       pythonDataReceived,
       pythonDataSent,
-      pythonNumBatchesReceived,
-      pythonNumBatchesSent)
+      pythonNumBatchesReceived)
       .compute(inputIterator, context.partitionId(), context)
 
     val unpickle = new Unpickler
