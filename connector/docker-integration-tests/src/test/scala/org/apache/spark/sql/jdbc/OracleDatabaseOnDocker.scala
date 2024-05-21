@@ -29,6 +29,7 @@ class OracleDatabaseOnDocker extends DatabaseOnDocker with Logging {
   )
   override val usesIpc = false
 
+
   override val jdbcPort: Int = 1521
 
   override def getJdbcUrl(ip: String, port: Int): String = {
