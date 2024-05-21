@@ -28,6 +28,7 @@ class OracleDatabaseOnDocker extends DatabaseOnDocker with Logging {
     "ORACLE_PASSWORD" -> oracle_password // gvenzl/oracle-free uses this
   )
   override val usesIpc = false
+
   override val jdbcPort: Int = 1521
 
   override def getJdbcUrl(ip: String, port: Int): String = {
