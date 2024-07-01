@@ -332,16 +332,12 @@ class DataSourceReader(ABC):
         )
 
     if TYPE_CHECKING:
-        import pyarrow as pa
-
-        RecordBatchType = pa.RecordBatch
+        from pyarrow import RecordBatch
     else:
-        RecordBatchType = None
+        RecordBatch = None
 
     @abstractmethod
-    def read(
-        self, partition: InputPartition
-    ) -> Union[Iterator[Tuple], Iterator["RecordBatchType"]]:
+    def read(self, partition: InputPartition) -> Union[Iterator[Tuple], Iterator["RecordBatch"]]:
         """
         Generates data for a given partition and returns an iterator of tuples or rows.
 
